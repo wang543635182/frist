@@ -1,0 +1,37 @@
+version: '2'
+services:
+  mysql:
+    image: daocloud.io/daocloud/mysql:5.7.21-1
+    environment:
+      - STARTORDER=0
+      - REPLICATION_MASTER='true'
+      # Default User is 'admin'
+      - MYSQL_USER=root
+      # Specify 'admin' Password Below
+      - MYSQL_PASS=123
+      - ON_CREATE_DB=test
+    ports:
+      - '3306'
+    volumes:
+      - /etc/mysql
+      - /var/lib/mysql
+  mysql-slave:
+    image: daocloud.io/daocloud/mysql:5.7.21-1
+    environment:
+      - ADDRESS=mysql:3306
+      - STARTORDER=1
+      - REPLICATION_SLAVE='true'
+      # Default User is 'admin'
+      - MYSQL_USER=root
+      # Specify 'admin'  Password Below
+      - MYSQL_PASS=123
+      - MYSQL_PORT_3306_TCP_ADDR=mysql
+      - MYSQL_PORT_3306_TCP_PORT=3306
+      - MYSQL_ENV_REPLICATION_USER=root
+      - MYSQL_ENV_REPLICATION_PASS=123
+      - ON_CREATE_DB=test
+    ports:
+      - '3306'
+    volumes:
+      - /etc/mysql
+      - /var/lib/mysql
